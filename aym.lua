@@ -223,8 +223,8 @@ local function click()
 	local actualCPS = CONFIG.CPS + math.random(-CONFIG.CPS_VARIATION, CONFIG.CPS_VARIATION)
 	local clickInterval = 1 / actualCPS
 	if now - lastClick >= clickInterval then
-		script.Parent.cps.Clicked.Value = not script.Parent.cps.Clicked.Value
-		--mouse1click()
+		--script.Parent.cps.Clicked.Value = not script.Parent.cps.Clicked.Value
+		mouse1click()
 		lastClick = now
 	end
 end
