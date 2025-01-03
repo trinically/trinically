@@ -224,7 +224,7 @@ local function click()
 	local clickInterval = 1 / actualCPS
 	if now - lastClick >= clickInterval then
 		--script.Parent.cps.Clicked.Value = not script.Parent.cps.Clicked.Value
-		mouse1click()
+		--mouse1click()
 		lastClick = now
 	end
 end
