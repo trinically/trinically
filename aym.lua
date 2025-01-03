@@ -77,7 +77,7 @@ local CONFIG = {
 	TELEPORT_PATTERN = {
 		AWAY_DISTANCE = 100,
 		RETURN_DISTANCE = 2,
-		COOLDOWN = 2
+		COOLDOWN = 0.2
 	}
 }
 
@@ -328,27 +328,36 @@ local function teleportAndHit(target)
 		return 
 	end
 
-	local currentTime         = workspace.DistributedGameTime
+	local currentTime = workspace.DistributedGameTime
 
 	if currentTime - lastTeleport < CONFIG.TELEPORT_PATTERN.COOLDOWN then 
 		return 
 	end
 
-	local awayDirection       = (LocalPlayer.Character.PrimaryPart.Position - target.PrimaryPart.Position).Unit
-	local awayPosition        = target.PrimaryPart.Position + awayDirection * CONFIG.TELEPORT_PATTERN.AWAY_DISTANCE
+	local camera = workspace.CurrentCamera
+	local head = LocalPlayer.Character:FindFirstChild("Head") or LocalPlayer.Character.PrimaryPart
+
+	if head then
+		camera.CameraType = Enum.CameraType.Scriptable
+		camera.CFrame = head.CFrame  -- Set camera position to player's head
+	end
+
+	local awayDirection = (LocalPlayer.Character.PrimaryPart.Position - target.PrimaryPart.Position).Unit
+	local awayPosition = target.PrimaryPart.Position + awayDirection * CONFIG.TELEPORT_PATTERN.AWAY_DISTANCE
 
 	LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(awayPosition))
 
 	task.wait(0.1)  
 
-	local behindDirection     = target.PrimaryPart.CFrame.LookVector
-	local behindPosition      = target.PrimaryPart.Position - behindDirection * CONFIG.TELEPORT_PATTERN.RETURN_DISTANCE
+	local behindDirection = target.PrimaryPart.CFrame.LookVector
+	local behindPosition = target.PrimaryPart.Position - behindDirection * CONFIG.TELEPORT_PATTERN.RETURN_DISTANCE
 
 	LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(behindPosition, target.PrimaryPart.Position))
 
 	click()
 
-	lastTeleport              = currentTime
+	camera.CameraType = Enum.CameraType.Custom  -- Return camera control to player
+	lastTeleport = currentTime
 end
 
 local function findNearestCorner(position)
