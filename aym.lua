@@ -498,18 +498,18 @@ RunService.Heartbeat:Connect(function()
 
 	local now = workspace.DistributedGameTime
 
-	if detectCombo(character) then
-		escape(character)
-		return
-	end
+	--if detectCombo(character) then
+	--	escape(character)
+	--	return
+	--end
 
-	if detectCombo(target) then
-		Reach.Value = CONFIG.COMBO_REACH
-		CONFIG.AIM_SPEED = CONFIG.COMBO_AIM_SPEED or originalAimSpeed
-		CONFIG.ZIGZAG_FREQUENCY = CONFIG.COMBO_ZIGZAG_FREQUENCY or originalZigzagFrequency
-		CONFIG.ZIGZAG_AMPLITUDE = CONFIG.COMBO_ZIGZAG_AMPLITUDE or originalZigzagAmplitude
-		return
-	end
+	--if detectCombo(target) then
+	--	Reach.Value = CONFIG.COMBO_REACH
+	--	CONFIG.AIM_SPEED = CONFIG.COMBO_AIM_SPEED or originalAimSpeed
+	--	CONFIG.ZIGZAG_FREQUENCY = CONFIG.COMBO_ZIGZAG_FREQUENCY or originalZigzagFrequency
+	--	CONFIG.ZIGZAG_AMPLITUDE = CONFIG.COMBO_ZIGZAG_AMPLITUDE or originalZigzagAmplitude
+	--	return
+	--end
 
 	if now - lastHit > 2 then
 		resetCombo()
