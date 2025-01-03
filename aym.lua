@@ -59,7 +59,7 @@ local CONFIG = {
 	TELEPORT_PATTERN = {
 		AWAY_DISTANCE = 100,
 		RETURN_DISTANCE = 2,
-		COOLDOWN = 3
+		COOLDOWN = 2
 	}
 }
 
@@ -172,7 +172,7 @@ local function aimlock()
 			local angleDifference = (currentAngle - targetAngle).Magnitude
 
 			local flickThreshold   = 0.1 -- sensitivity
-			local flickSpeed       = 0.1 -- speed
+			local flickSpeed       = 0.25 -- speed
 			local microAdjustSpeed = 0.1 -- keeps it human
 
 			if angleDifference > flickThreshold then
