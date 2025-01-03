@@ -40,7 +40,8 @@ local CONFIG = {
 	TELEPORT_TOGGLE_KEY--[[=======]] = Enum.KeyCode.Q,
 
 	-- // Less important configurations, only touch if you know what you're doing. // --
-
+	
+        VERSION = "v1.1",
 	ACTION_NAME = "ToggleAimston",
 
 	RETARGET_INTERVAL = 5,
@@ -506,6 +507,7 @@ if UserInputService.TouchEnabled then
 end
 
 Reach.Value = CONFIG.REACH
+print(string.format("Running aym %s", CONFIG.VERSION))
 
 RunService.Heartbeat:Connect(function()
 	if not CONFIG.ACTIVE then return end
