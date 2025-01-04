@@ -565,10 +565,8 @@ RunService.Heartbeat:Connect(function()
 		aimlock()  -- aimlock will still run but won't attempt to move
 	end
 
-	if not maneuvering and now - lastJump > CONFIG.JUMP_COOLDOWN then
-		character.Humanoid.Jump = true
-		lastJump = now
-	end
+        character.Humanoid.Jump = true
+
 
 	if isFirstPerson() then
 		coroutine.wrap(aimlock)()
