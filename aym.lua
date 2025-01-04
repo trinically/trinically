@@ -565,7 +565,7 @@ RunService.Heartbeat:Connect(function()
 		aimlock()  -- aimlock will still run but won't attempt to move
 	end
 
-	if not maneuvering and now - lastJump > CONFIG.JUMP_COOLDOWN and math.random(1, 5) == 1 then
+	if not maneuvering and now - lastJump > CONFIG.JUMP_COOLDOWN then
 		character.Humanoid.Jump = true
 		lastJump = now
 	end
