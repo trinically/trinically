@@ -125,27 +125,32 @@ local function getWalkSpeed(target)
 end
 
 local function getTarget()
-	local closest, dist = nil, CONFIG.DETECTION_DISTANCE
-	for _, model in pairs(workspace:GetDescendants()) do
-		if model:IsA("Model") and model:FindFirstChildOfClass("Humanoid") and model ~= LocalPlayer.Character then
-			local part = model.PrimaryPart or model:FindFirstChild("HumanoidRootPart")
-			if part then
-				local d = (part.Position - LocalPlayer.Character.PrimaryPart.Position).Magnitude
-				local vd = math.abs(part.Position.Y - LocalPlayer.Character.PrimaryPart.Position.Y)
-				if d > dist or vd > CONFIG.MAX_VERTICAL_DISTANCE then
-					continue
-				end
-				local plr = Players:GetPlayerFromCharacter(model)
-				if (plr and CONFIG.EXCLUDE_PLAYERS) or (not plr and CONFIG.EXCLUDE_NPCS) or (plr and CONFIG.EXCLUDE_TEAMMATES and plr.Team == LocalPlayer.Team) then
-					continue
-				end
-				if not CONFIG.WALL_DETECTION or isVisible(model) or d <= 20 then
-					closest, dist = model, d
-				end
-			end
-		end
-	end
-	return closest
+    local closest, dist = nil, CONFIG.DETECTION_DISTANCE
+
+    for _, model in pairs(workspace:GetDescendants()) do
+        if model:IsA("Model") and model:FindFirstChildOfClass("Humanoid") and model ~= LocalPlayer.Character then
+            local part = model.PrimaryPart or model:FindFirstChild("HumanoidRootPart")
+            if not part then continue end
+
+            local d = (part.Position - LocalPlayer.Character.PrimaryPart.Position).Magnitude
+            local verticalDifference = part.Position.Y - LocalPlayer.Character.PrimaryPart.Position.Y
+
+            if d > dist or verticalDifference > 20 then continue end
+
+            local plr = Players:GetPlayerFromCharacter(model)
+            if (plr and CONFIG.EXCLUDE_PLAYERS) or 
+               (not plr and CONFIG.EXCLUDE_NPCS) or 
+               (plr and CONFIG.EXCLUDE_TEAMMATES and plr.Team == LocalPlayer.Team) then
+                continue
+            end
+
+            if not CONFIG.WALL_DETECTION or isVisible(model) or d <= 20 then
+                closest, dist = model, d
+            end
+        end
+    end
+
+    return closest
 end
 
 local function getAimPart(target)
