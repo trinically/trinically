@@ -26,7 +26,7 @@ local Reach = ReplicatedStorage:WaitForChild("Constants"):WaitForChild("Melee"):
 
 local CONFIG = {
 	DETECTION_DISTANCE --[[=======]] = 1000,
-	AIM_SPEED          --[[=======]] = 10,
+	AIM_SPEED          --[[=======]] = 2.5,
 	AIM_ACCURACY       --[[=======]] = 100,
 
 	ACTIVE             --[[=======]] = true,
@@ -194,7 +194,7 @@ local function aimlock()
 
             local angleDifference = (currentAngle - targetAngle).Magnitude
 
-            local baseSpeed = 0.01 
+            local baseSpeed = 1
             local speedMultiplier = CONFIG.AIM_SPEED / 100
             local aimSpeed = baseSpeed + (speedMultiplier * 0.09) 
 
