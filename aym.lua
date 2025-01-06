@@ -176,38 +176,33 @@ end
 
 
 local function aimlock()
-	if CONFIG.ACTIVE and target and target.PrimaryPart then
-		local part = getAimPart(target)
-		if part then
-			local pos = part.Position or part:GetPivot().Position
-			local inaccuracy = (100 - CONFIG.AIM_ACCURACY) / 100
+    if CONFIG.ACTIVE and target and target.PrimaryPart then
+        local part = getAimPart(target)
+        if part then
+            local pos = part.Position or part:GetPivot().Position
+            local inaccuracy = (100 - CONFIG.AIM_ACCURACY) / 100
 
-			local offset = Vector3.new(
-				math.random(-10, 10) * inaccuracy,
-				math.random(-10, 10) * inaccuracy,
-				math.random(-10, 10) * inaccuracy
-			)
+            local offset = Vector3.new(
+                math.random(-10, 10) * inaccuracy,
+                math.random(-10, 10) * inaccuracy,
+                math.random(-10, 10) * inaccuracy
+            )
 
-			local targetCF = CFrame.new(camera.CFrame.Position, pos + offset)
-			local currentAngle = camera.CFrame.LookVector
-			local targetAngle = targetCF.LookVector
+            local targetCF = CFrame.new(camera.CFrame.Position, pos + offset)
+            local currentAngle = camera.CFrame.LookVector
+            local targetAngle = targetCF.LookVector
 
-			local angleDifference = (currentAngle - targetAngle).Magnitude
+            local angleDifference = (currentAngle - targetAngle).Magnitude
 
-			local flickThreshold   = 0.1 -- sensitivity
-			local flickSpeed       = 0.25 -- speed
-			local microAdjustSpeed = 0.1 -- keeps it human
+            local smoothness = 0.05 + math.random() * 0.05 -- Random smoothness between 0.05 and 0.1
+            local maxRotationSpeed = 0.02 + math.random() * 0.03 -- Random max rotation speed between 0.02 and 0.05
 
-			if angleDifference > flickThreshold then
-				camera.CFrame = camera.CFrame:Lerp(targetCF, flickSpeed)
-			else
-				camera.CFrame = camera.CFrame:Lerp(targetCF, microAdjustSpeed)
-			end
-		end
-	end
+            local lerpAlpha = math.min(smoothness * angleDifference, maxRotationSpeed)
+
+            camera.CFrame = camera.CFrame:Lerp(targetCF, lerpAlpha)
+        end
+    end
 end
-
-
 
 local function isFirstPerson()
 	return LocalPlayer.CameraMode == Enum.CameraMode.LockFirstPerson or 
