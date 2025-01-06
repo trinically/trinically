@@ -26,7 +26,7 @@ local Reach = ReplicatedStorage:WaitForChild("Constants"):WaitForChild("Melee"):
 
 local CONFIG = {
 	DETECTION_DISTANCE --[[=======]] = 1000,
-	AIM_SPEED          --[[=======]] = 10,
+	AIM_SPEED          --[[=======]] = 2,
 	AIM_ACCURACY       --[[=======]] = 100,
 
 	ACTIVE             --[[=======]] = true,
@@ -176,35 +176,20 @@ end
 
 
 local function aimlock()
-    if CONFIG.ACTIVE and target and target.PrimaryPart then
-        local part = getAimPart(target)
-        if part then
-            local pos = part.Position or part:GetPivot().Position
-            local inaccuracy = (100 - CONFIG.AIM_ACCURACY) / 100
-
-            local offset = Vector3.new(
-                math.random(-10, 10) * inaccuracy,
-                math.random(-10, 10) * inaccuracy,
-                math.random(-10, 10) * inaccuracy
-            )
-
-            local targetCF = CFrame.new(camera.CFrame.Position, pos + offset)
-            local currentAngle = camera.CFrame.LookVector
-            local targetAngle = targetCF.LookVector
-
-            local angleDifference = (currentAngle - targetAngle).Magnitude
-
-            local baseSpeed = 1
-            local speedMultiplier = CONFIG.AIM_SPEED / 100
-            local aimSpeed = baseSpeed + (speedMultiplier * 0.09) 
-
-            local randomFactor = 0.005 + math.random() * 0.01
-            
-            local lerpAlpha = math.min(aimSpeed * angleDifference + randomFactor, 1)
-
-            camera.CFrame = camera.CFrame:Lerp(targetCF, lerpAlpha)
-        end
-    end
+	if CONFIG.ACTIVE and target and target.PrimaryPart then
+		local part = getAimPart(target)
+		if part then
+			local pos = (part.Position or part:GetPivot().Position)
+			local inaccuracy = (100 - CONFIG.AIM_ACCURACY) / 100
+			local offset = Vector3.new(
+				math.random(-10, 10) * inaccuracy / 100,
+				math.random(-10, 10) * inaccuracy / 100,
+				math.random(-10, 10) * inaccuracy / 100
+			)
+			local cf = CFrame.new(camera.CFrame.Position, pos + offset)
+			camera.CFrame = camera.CFrame:Lerp(cf, CONFIG.AIM_SPEED / 10)
+		end
+	end
 end
 
 
