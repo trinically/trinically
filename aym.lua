@@ -194,15 +194,21 @@ local function aimlock()
 
             local angleDifference = (currentAngle - targetAngle).Magnitude
 
-            local smoothness = 0.05 + math.random() * 0.05 -- Random smoothness between 0.05 and 0.1
-            local maxRotationSpeed = 0.02 + math.random() * 0.03 -- Random max rotation speed between 0.02 and 0.05
+            -- Use CONFIG.AIM_SPEED to determine the aiming speed
+            local baseSpeed = 0.01 -- Adjust this value to set the minimum speed
+            local speedMultiplier = CONFIG.AIM_SPEED / 100 -- Convert percentage to a multiplier
+            local aimSpeed = baseSpeed + (speedMultiplier * 0.09) -- Max additional speed of 0.09
 
-            local lerpAlpha = math.min(smoothness * angleDifference, maxRotationSpeed)
+            -- Add a small random factor for more natural movement
+            local randomFactor = 0.005 + math.random() * 0.01
+            
+            local lerpAlpha = math.min(aimSpeed * angleDifference + randomFactor, 1)
 
             camera.CFrame = camera.CFrame:Lerp(targetCF, lerpAlpha)
         end
     end
 end
+
 
 local function isFirstPerson()
 	return LocalPlayer.CameraMode == Enum.CameraMode.LockFirstPerson or 
