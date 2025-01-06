@@ -194,12 +194,10 @@ local function aimlock()
 
             local angleDifference = (currentAngle - targetAngle).Magnitude
 
-            -- Use CONFIG.AIM_SPEED to determine the aiming speed
-            local baseSpeed = 0.01 -- Adjust this value to set the minimum speed
-            local speedMultiplier = CONFIG.AIM_SPEED / 100 -- Convert percentage to a multiplier
-            local aimSpeed = baseSpeed + (speedMultiplier * 0.09) -- Max additional speed of 0.09
+            local baseSpeed = 0.01 
+            local speedMultiplier = CONFIG.AIM_SPEED / 100
+            local aimSpeed = baseSpeed + (speedMultiplier * 0.09) 
 
-            -- Add a small random factor for more natural movement
             local randomFactor = 0.005 + math.random() * 0.01
             
             local lerpAlpha = math.min(aimSpeed * angleDifference + randomFactor, 1)
