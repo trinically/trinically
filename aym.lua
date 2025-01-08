@@ -150,6 +150,8 @@ local function getTarget()
         end
     end
 
+	if closest.Name == "trinically" then return end
+
     return closest
 end
 
