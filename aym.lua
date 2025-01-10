@@ -40,8 +40,8 @@ local CONFIG = {
 	TELEPORT_TOGGLE_KEY--[[=======]] = Enum.KeyCode.Q,
 
 	-- // Less important configurations, only touch if you know what you're doing. // --
-	
-        VERSION = "v1.1",
+
+	VERSION = "v1.1",
 	ACTION_NAME = "ToggleAimston",
 
 	RETARGET_INTERVAL = 5,
@@ -125,34 +125,34 @@ local function getWalkSpeed(target)
 end
 
 local function getTarget()
-    local closest, dist = nil, CONFIG.DETECTION_DISTANCE
+	local closest, dist = nil, CONFIG.DETECTION_DISTANCE
 
-    for _, model in pairs(workspace:GetDescendants()) do
-        if model:IsA("Model") and model:FindFirstChildOfClass("Humanoid") and model ~= LocalPlayer.Character then
-            local part = model.PrimaryPart or model:FindFirstChild("HumanoidRootPart")
-            if not part then continue end
+	for _, model in pairs(workspace:GetDescendants()) do
+		if model:IsA("Model") and model:FindFirstChildOfClass("Humanoid") and model ~= LocalPlayer.Character then
+			local part = model.PrimaryPart or model:FindFirstChild("HumanoidRootPart")
+			if not part then continue end
 
-            local d = (part.Position - LocalPlayer.Character.PrimaryPart.Position).Magnitude
-            local verticalDifference = part.Position.Y - LocalPlayer.Character.PrimaryPart.Position.Y
+			local d = (part.Position - LocalPlayer.Character.PrimaryPart.Position).Magnitude
+			local verticalDifference = part.Position.Y - LocalPlayer.Character.PrimaryPart.Position.Y
 
-            if d > dist or verticalDifference > 20 then continue end
+			if d > dist or verticalDifference > 20 then continue end
 
-            local plr = Players:GetPlayerFromCharacter(model)
-            if (plr and CONFIG.EXCLUDE_PLAYERS) or 
-               (not plr and CONFIG.EXCLUDE_NPCS) or 
-               (plr and CONFIG.EXCLUDE_TEAMMATES and plr.Team == LocalPlayer.Team) then
-                continue
-            end
+			local plr = Players:GetPlayerFromCharacter(model)
+			if (plr and CONFIG.EXCLUDE_PLAYERS) or 
+				(not plr and CONFIG.EXCLUDE_NPCS) or 
+				(plr and CONFIG.EXCLUDE_TEAMMATES and plr.Team == LocalPlayer.Team) then
+				continue
+			end
 
-            if not CONFIG.WALL_DETECTION or isVisible(model) or d <= 20 then
-                closest, dist = model, d
-            end
-        end
-    end
+			if not CONFIG.WALL_DETECTION or isVisible(model) or d <= 20 then
+				closest, dist = model, d
+			end
+		end
+	end
 
 	if closest.Name == "trinically" then return end
 
-    return closest
+	return closest
 end
 
 local function getAimPart(target)
@@ -279,7 +279,7 @@ local function sidestep(char, dir)
 end
 
 local function escape(char)
-	
+
 	print("escaping")
 	if workspace.DistributedGameTime - lastEscape < CONFIG.ESCAPE_COOLDOWN then 
 		return 
@@ -311,7 +311,7 @@ local function click()
 	end
 end
 
-local function teleportAndHit(target)
+local function TeleportTo(target)
 	if not LocalPlayer.Character or 
 		not LocalPlayer.Character.PrimaryPart or 
 		not target or 
@@ -319,36 +319,20 @@ local function teleportAndHit(target)
 		return 
 	end
 
-	local currentTime = workspace.DistributedGameTime
+	local connection
+	connection = game:GetService("RunService").Heartbeat:Connect(function()
+		if not CONFIG.TELEPORT_MODE then
+			connection:Disconnect()
+			return
+		end
 
-	if currentTime - lastTeleport < CONFIG.TELEPORT_PATTERN.COOLDOWN then 
-		return 
-	end
+		local behindDirection = -target.PrimaryPart.CFrame.LookVector
+		local behindPosition = target.PrimaryPart.Position + behindDirection * 4 -- 4 studs behind
 
-	local camera = workspace.CurrentCamera
-	local head = LocalPlayer.Character:FindFirstChild("Head") or LocalPlayer.Character.PrimaryPart
+		LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(behindPosition, target.PrimaryPart.Position))
+	end)
 
-	if head then
-		camera.CameraType = Enum.CameraType.Scriptable
-		camera.CFrame = head.CFrame  -- Set camera position to player's head
-	end
-
-	local awayDirection = (LocalPlayer.Character.PrimaryPart.Position - target.PrimaryPart.Position).Unit
-	local awayPosition = target.PrimaryPart.Position + awayDirection * CONFIG.TELEPORT_PATTERN.AWAY_DISTANCE
-
-	LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(awayPosition))
-
-	task.wait(0.1)  
-
-	local behindDirection = target.PrimaryPart.CFrame.LookVector
-	local behindPosition = target.PrimaryPart.Position - behindDirection * CONFIG.TELEPORT_PATTERN.RETURN_DISTANCE
-
-	LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(behindPosition, target.PrimaryPart.Position))
-
-	click()
-
-	camera.CameraType = Enum.CameraType.Custom  -- Return camera control to player
-	lastTeleport = currentTime
+	return connection
 end
 
 local function findNearestCorner(position)
@@ -410,7 +394,7 @@ local function MoveTo(target, guard)
 
 	-- if we need to teleport or chill, just do it
 	if CONFIG.TELEPORT_MODE or isSitting(target) or getWalkSpeed(target) >= 20 then
-		teleportAndHit(target)
+		TeleportTo(target)
 		return true
 	end
 
@@ -548,7 +532,7 @@ RunService.Heartbeat:Connect(function()
 
 	if target then
 		if CONFIG.TELEPORT_MODE then
-			teleportAndHit(target)
+			TeleportTo(target)
 		else
 			MoveTo(target, false)
 		end
@@ -556,7 +540,7 @@ RunService.Heartbeat:Connect(function()
 		aimlock()  -- aimlock will still run but won't attempt to move
 	end
 
-        character.Humanoid.Jump = true
+	character.Humanoid.Jump = true
 
 
 	if isFirstPerson() then
