@@ -26,7 +26,7 @@ local Reach = ReplicatedStorage:WaitForChild("Constants"):WaitForChild("Melee"):
 
 local CONFIG = {
 	DETECTION_DISTANCE --[[=======]] = 1000,
-	AIM_SPEED          --[[=======]] = 2,
+	AIM_SPEED          --[[=======]] = 20,
 	AIM_ACCURACY       --[[=======]] = 100,
 
 	ACTIVE             --[[=======]] = true,
@@ -59,7 +59,7 @@ local CONFIG = {
 
 	JUMP_COOLDOWN = 0.1,
 
-	TARGET_DISTANCE = 5,
+	TARGET_DISTANCE = 3,
 
 	MAX_VERTICAL_DISTANCE = 20,
 
